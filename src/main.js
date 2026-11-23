@@ -4,6 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { createChatbot } from './chatbot.js'
 import { createDrawingBoard } from './drawing.js'
 import { auth } from './firebaseConfig.js'
+import { waitForSubmissionStage } from './submissionWait.js'
 
 const panels = {
   key: document.querySelector('[data-step="key"]'),
@@ -92,7 +93,7 @@ endChatButton.addEventListener('click', () => {
   drawingBoard ??= createDrawingBoard({ onSubmit: handleDrawingSubmit })
 })
 
-async function handleDrawingSubmit({ blob, submittedAtMs }) {
+async function handleDrawingSubmit({ blob, submittedAtMs, onProgress }) {
   const user = auth?.currentUser
 
   if (!user || user.uid !== currentUser?.uid) {
@@ -102,7 +103,11 @@ async function handleDrawingSubmit({ blob, submittedAtMs }) {
   let submissionModule
 
   try {
-    submissionModule = await import('./firebaseSubmission.js')
+    onProgress?.('제출 연결을 준비하고 있어요.')
+    submissionModule = await waitForSubmissionStage(import('./firebaseSubmission.js'), '제출 연결 준비', 15000).catch((error) => {
+      error.preserveSubmission = false
+      throw error
+    })
     return await submissionModule.submitStudentReflection({
       user,
       conversation: chatbot.getConversation(),
@@ -112,10 +117,13 @@ async function handleDrawingSubmit({ blob, submittedAtMs }) {
         endedAtMs: submittedAtMs,
       },
       imageBlob: blob,
+      onProgress,
     })
   } catch (error) {
     const message = submissionModule?.getSubmissionErrorMessage(error) || '제출 모듈을 불러오지 못했어요. 인터넷 연결을 확인해 주세요.'
-    throw new Error(message)
+    const submissionError = new Error(message)
+    submissionError.preserveSubmission = Boolean(error.preserveSubmission)
+    throw submissionError
   }
 }
 

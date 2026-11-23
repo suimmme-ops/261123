@@ -1,3 +1,5 @@
+import { waitForSubmissionStage } from './submissionWait.js'
+
 const MAX_HISTORY = 20
 
 export function createDrawingBoard({ onSubmit } = {}) {
@@ -21,6 +23,7 @@ export function createDrawingBoard({ onSubmit } = {}) {
   let isEraser = false
   let hasDrawn = false
   let lastPoint = null
+  let boardLocked = false
   const history = []
 
   function resizeCanvas() {
@@ -116,6 +119,7 @@ export function createDrawingBoard({ onSubmit } = {}) {
   }
 
   function startStroke(event) {
+    if (boardLocked) return
     if (event.pointerType === 'mouse' && event.button !== 0) return
     event.preventDefault()
     saveHistory()
@@ -190,6 +194,17 @@ export function createDrawingBoard({ onSubmit } = {}) {
 
   clearButton.addEventListener('click', () => clearCanvas())
 
+  function lockBoard(locked) {
+    boardLocked = locked
+    isDrawing = false
+    lastPoint = null
+    document.querySelectorAll('.drawing-tools button, .drawing-tools input').forEach((control) => {
+      control.disabled = locked
+    })
+    if (!locked) undoButton.disabled = history.length === 0
+    canvas.setAttribute('aria-disabled', String(locked))
+  }
+
   submitButton.addEventListener('click', async () => {
     if (!hasDrawn) {
       submitStatus.className = 'is-error'
@@ -198,19 +213,28 @@ export function createDrawingBoard({ onSubmit } = {}) {
     }
 
     submitButton.disabled = true
+    const submittedAtMs = Date.now()
+    lockBoard(true)
     submitButton.textContent = '제출하고 있어요...'
     submitStatus.className = ''
     submitStatus.textContent = '그림과 오늘의 대화 기록을 안전하게 저장하고 있어요.'
+    let attemptActive = true
 
     try {
-      const blob = await new Promise((resolve, reject) => {
+      const blob = await waitForSubmissionStage(new Promise((resolve, reject) => {
         canvas.toBlob((result) => {
           if (result) resolve(result)
           else reject(new Error('그림 파일을 만들지 못했습니다.'))
         }, 'image/png')
+      }), '그림 파일 생성', 10000).catch((error) => {
+        error.preserveSubmission = false
+        throw error
       })
 
-      const result = await onSubmit?.({ blob, submittedAtMs: Date.now() })
+      if (!onSubmit) throw new Error('제출 기능을 연결하지 못했습니다.')
+      const result = await onSubmit({ blob, submittedAtMs, onProgress: (message) => {
+        if (attemptActive) submitStatus.textContent = message
+      } })
       window.dispatchEvent(new CustomEvent('drawing:submitted', { detail: result }))
       submitStatus.className = 'is-success'
       submitStatus.textContent = '제출이 완료되었어요. 오늘의 마음을 소중히 기록했어요.'
@@ -218,8 +242,11 @@ export function createDrawingBoard({ onSubmit } = {}) {
     } catch (error) {
       submitStatus.className = 'is-error'
       submitStatus.textContent = error.message
-      submitButton.textContent = '다시 제출하기'
+      lockBoard(Boolean(error.preserveSubmission))
+      submitButton.textContent = error.preserveSubmission ? '제출 상태 다시 확인' : '다시 제출하기'
       submitButton.disabled = false
+    } finally {
+      attemptActive = false
     }
   })
 

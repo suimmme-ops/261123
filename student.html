@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="대화와 그림으로 오늘의 마음을 돌아보는 마음한칸 학생 활동" />
+    <title>오늘의 마음 활동 | 마음한칸</title>
+  </head>
+  <body class="student-page">
+    <header class="student-header">
+      <a class="brand" href="/" aria-label="마음한칸 홈">
+        <span class="brand-mark" aria-hidden="true">마음</span><span>마음한칸</span>
+      </a>
+      <div class="activity-progress" aria-label="활동 진행 단계">
+        <span class="progress-item is-current" data-progress="key"><b>1</b> 준비</span>
+        <span class="progress-line" aria-hidden="true"></span>
+        <span class="progress-item" data-progress="chat"><b>2</b> 대화</span>
+        <span class="progress-line" aria-hidden="true"></span>
+        <span class="progress-item" data-progress="draw"><b>3</b> 그림</span>
+      </div>
+      <div class="student-account" data-student-account hidden>
+        <img data-student-photo alt="" referrerpolicy="no-referrer" />
+        <div>
+          <strong data-student-name></strong>
+          <span data-student-email></span>
+        </div>
+        <a class="header-home" href="/">처음으로</a>
+      </div>
+    </header>
+
+    <main class="student-main" data-student-main hidden>
+      <section class="api-key-panel activity-panel" data-step="key" aria-labelledby="key-title">
+        <div class="panel-intro">
+          <span class="panel-symbol" aria-hidden="true">✦</span>
+          <p class="eyebrow">활동을 시작하기 전에</p>
+          <h1 id="key-title">마음 친구를 연결해 주세요</h1>
+          <p>OpenAI API 키를 확인하면 오늘의 대화와 그림 활동이 시작돼요.</p>
+        </div>
+
+        <form class="key-form" data-key-form>
+          <label for="api-key">OpenAI API Key</label>
+          <div class="key-input-row">
+            <input
+              id="api-key"
+              name="apiKey"
+              type="password"
+              placeholder="sk-..."
+              autocomplete="off"
+              spellcheck="false"
+              required
+            />
+            <button class="button button-primary key-submit" type="submit">API 키 확인</button>
+          </div>
+          <label class="show-key-option">
+            <input type="checkbox" data-show-key />
+            입력한 키 보기
+          </label>
+          <label class="security-consent">
+            <input type="checkbox" name="securityConsent" required />
+            <span>
+              브라우저에서 API 키를 사용하면 개발자 도구를 통해 키가 노출될 수 있음을 이해했습니다.
+              이 방식은 개인 테스트용으로만 사용하겠습니다.
+            </span>
+          </label>
+          <p class="key-status" data-key-status role="status" aria-live="polite"></p>
+        </form>
+
+        <aside class="security-note" aria-label="API 키 보안 안내">
+          <span aria-hidden="true">!</span>
+          <p>
+            키는 저장소나 브라우저 저장 공간에 저장하지 않으며, 현재 페이지를 새로고침하면 사라집니다.
+            실제 학생 대상 배포에서는 반드시 서버를 통해 API를 호출해야 합니다.
+          </p>
+        </aside>
+      </section>
+
+      <section class="chat-panel activity-panel" data-step="chat" aria-labelledby="chat-title" hidden>
+        <div class="chat-heading">
+          <div>
+            <p class="eyebrow">오늘의 마음 대화</p>
+            <h1 id="chat-title">마음 친구와 이야기해요</h1>
+            <p>정답은 없어요. 떠오르는 만큼 편안하게 이야기해 주세요.</p>
+          </div>
+          <div class="turn-card" aria-label="대화 횟수">
+            <strong data-turn-count>0</strong><span>/ 7회</span>
+            <small>3회부터 마칠 수 있어요</small>
+          </div>
+        </div>
+
+        <div class="chat-window">
+          <div class="messages" data-messages aria-live="polite" aria-label="마음 친구와의 대화"></div>
+          <div class="typing-indicator" data-typing hidden role="status">
+            <span></span><span></span><span></span>
+            마음 친구가 생각하고 있어요
+          </div>
+        </div>
+
+        <form class="message-form" data-message-form>
+          <label class="sr-only" for="message-input">마음 친구에게 답하기</label>
+          <textarea
+            id="message-input"
+            name="message"
+            rows="2"
+            maxlength="800"
+            placeholder="오늘 있었던 일을 편안하게 적어 보세요"
+            required
+          ></textarea>
+          <button class="send-button" type="submit">보내기</button>
+        </form>
+        <div class="chat-actions">
+          <p data-turn-guide>조금 더 이야기한 뒤 대화를 마칠 수 있어요.</p>
+          <button class="button button-secondary" type="button" data-end-chat disabled>
+            Chatbot과의 대화 끝내기
+          </button>
+        </div>
+      </section>
+
+      <section class="drawing-panel activity-panel" data-step="draw" aria-labelledby="drawing-title" hidden>
+        <div class="drawing-heading">
+          <div>
+            <p class="eyebrow">오늘의 마음 그림</p>
+            <h1 id="drawing-title">오늘 하루를 색과 선으로 표현해요</h1>
+            <p>잘 그리지 않아도 괜찮아요. 지금 떠오르는 색과 모양을 자유롭게 남겨 보세요.</p>
+          </div>
+          <span class="conversation-complete">대화 완료 · <b data-final-turns>0</b>회</span>
+        </div>
+
+        <div class="drawing-workspace">
+          <aside class="drawing-tools" aria-label="그림 도구">
+            <fieldset>
+              <legend>색상</legend>
+              <div class="color-palette" data-color-palette>
+                <button class="color-chip is-selected" type="button" data-color="#df6254" style="--chip-color: #df6254" aria-label="코랄색" aria-pressed="true"></button>
+                <button class="color-chip" type="button" data-color="#f0a43c" style="--chip-color: #f0a43c" aria-label="주황색" aria-pressed="false"></button>
+                <button class="color-chip" type="button" data-color="#e4c544" style="--chip-color: #e4c544" aria-label="노란색" aria-pressed="false"></button>
+                <button class="color-chip" type="button" data-color="#6da37a" style="--chip-color: #6da37a" aria-label="초록색" aria-pressed="false"></button>
+                <button class="color-chip" type="button" data-color="#5586c7" style="--chip-color: #5586c7" aria-label="파란색" aria-pressed="false"></button>
+                <button class="color-chip" type="button" data-color="#8b6bb5" style="--chip-color: #8b6bb5" aria-label="보라색" aria-pressed="false"></button>
+                <button class="color-chip" type="button" data-color="#414141" style="--chip-color: #414141" aria-label="검은색" aria-pressed="false"></button>
+              </div>
+            </fieldset>
+
+            <label class="range-control" for="brush-lightness">
+              <span>펜 명도 <output data-lightness-output>45%</output></span>
+              <input id="brush-lightness" data-lightness type="range" min="15" max="90" value="45" />
+            </label>
+            <label class="range-control" for="brush-opacity">
+              <span>불투명도 <output data-opacity-output>100%</output></span>
+              <input id="brush-opacity" data-opacity type="range" min="10" max="100" value="100" />
+            </label>
+            <label class="range-control" for="brush-size">
+              <span>브러시 크기 <output data-size-output>10px</output></span>
+              <input id="brush-size" data-size type="range" min="2" max="42" value="10" />
+            </label>
+
+            <div class="tool-buttons">
+              <button type="button" data-eraser aria-pressed="false">지우개</button>
+              <button type="button" data-undo>되돌리기</button>
+              <button type="button" data-clear>전체 지우기</button>
+            </div>
+          </aside>
+
+          <div class="canvas-area">
+            <canvas data-drawing-canvas aria-label="오늘 하루를 표현하는 그림판"></canvas>
+            <p>마우스나 손가락으로 흰 도화지 위에 그려 보세요.</p>
+          </div>
+        </div>
+
+        <div class="submission-area">
+          <p data-submit-status role="status" aria-live="polite">그림은 아직 어디에도 전송되지 않아요.</p>
+          <button class="button button-primary submit-drawing" type="button" data-submit-drawing>그림 제출하기</button>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

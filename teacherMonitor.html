@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="학생의 대화와 마음 그림을 살펴보는 교사 모니터링" />
+    <title>교사 모니터링 | 마음한칸</title>
+  </head>
+  <body class="monitor-page" data-admin-page hidden>
+    <div class="monitor-layout">
+      <aside class="monitor-sidebar" aria-label="사용자와 날짜 필터 및 학생 기록">
+        <a class="monitor-brand" href="/">마음한칸 <span aria-hidden="true">✦</span></a>
+        <p class="sidebar-caption">교사 모니터링</p>
+        <div class="monitor-account">
+          <span class="account-avatar" aria-hidden="true" data-account-initial>교</span>
+          <div><strong data-account-name></strong><span data-account-email></span></div>
+        </div>
+        <section class="date-filter" aria-labelledby="date-filter-title">
+          <div class="sidebar-section-heading">
+            <h2 id="date-filter-title">기록 날짜</h2>
+            <div class="filter-actions"><button type="button" data-all-dates>전체</button><button type="button" data-clear-dates>해제</button></div>
+          </div>
+          <p class="filter-description">원하는 날짜를 함께 선택하세요 · 한국 시간</p>
+          <div class="date-options" data-date-options><p class="sidebar-empty">날짜를 불러오고 있어요.</p></div>
+        </section>
+        <section class="records-section" aria-labelledby="records-title">
+          <div class="sidebar-section-heading"><h2 id="records-title">학생 기록</h2><span class="record-count" data-record-count>0</span></div>
+          <label class="record-search"><span class="sr-only">학생 이름 또는 이메일 검색</span><input type="search" data-search placeholder="이름 또는 이메일 검색" /></label>
+          <div class="record-list" data-record-list></div>
+        </section>
+        <a class="monitor-home" href="/">메인 화면으로</a>
+      </aside>
+
+      <main class="monitor-main">
+        <header class="monitor-heading">
+          <div><p class="monitor-kicker">마음을 이해하는 시간</p><h1>학생 마음 기록</h1><p>대화와 그림에 담긴 학생의 하루를 함께 살펴보세요.</p></div>
+          <button class="monitor-refresh" type="button" data-refresh>새로고침</button>
+        </header>
+        <p class="monitor-status" data-monitor-status role="status" aria-live="polite">기록을 불러오고 있어요.</p>
+
+        <section class="monitor-empty" data-detail-empty>
+          <span aria-hidden="true">✦</span><h2>어떤 하루를 함께 살펴볼까요?</h2><p>왼쪽에서 날짜를 고르고 학생 기록을 선택해 주세요.</p>
+        </section>
+
+        <section class="reflection-detail" data-detail hidden aria-labelledby="detail-title">
+          <header class="reflection-heading">
+            <div><p data-detail-date></p><h2 id="detail-title" data-detail-name></h2><span data-detail-email></span></div>
+            <button class="record-delete-main" type="button" data-delete-selected>이 기록 삭제</button>
+          </header>
+          <dl class="reflection-stats">
+            <div><dt>대화 시간</dt><dd data-chat-duration>—</dd></div>
+            <div><dt>그림 시간</dt><dd data-drawing-duration>—</dd></div>
+            <div><dt>학생 답변</dt><dd data-turns>—</dd></div>
+          </dl>
+          <div class="reflection-columns">
+            <section class="conversation-view" aria-labelledby="conversation-title">
+              <header class="detail-section-heading"><h3 id="conversation-title">마음 친구와의 대화</h3><span>전체 대화</span></header>
+              <div class="monitor-messages" data-conversation></div>
+            </section>
+            <section class="drawing-view" aria-labelledby="drawing-title">
+              <header class="detail-section-heading"><h3 id="drawing-title">오늘의 마음 그림</h3><span>PNG</span></header>
+              <div class="drawing-preview"><p data-image-status role="status">그림을 불러오고 있어요.</p><img data-drawing-image alt="" hidden /></div>
+              <a class="drawing-original" data-image-link target="_blank" rel="noopener noreferrer" hidden>그림 크게 보기</a>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+    <dialog class="delete-dialog" data-delete-dialog aria-labelledby="delete-title">
+      <form method="dialog">
+        <span class="delete-symbol" aria-hidden="true">!</span>
+        <h2 id="delete-title">이 마음 기록을 삭제할까요?</h2>
+        <p data-delete-description></p><p>전체 대화와 그림이 함께 삭제됩니다. 삭제 후에는 이 화면에서 복구할 수 없습니다.</p>
+        <div class="dialog-actions"><button type="submit" value="cancel" data-delete-cancel>취소</button><button type="button" class="confirm-delete" data-delete-confirm>기록 삭제</button></div>
+      </form>
+    </dialog>
+    <script type="module" src="/src/admin.js"></script>
+  </body>
+</html>

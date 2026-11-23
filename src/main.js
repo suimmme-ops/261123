@@ -41,6 +41,8 @@ function showStep(step) {
     const itemIndex = stepOrder.indexOf(item.dataset.progress)
     item.classList.toggle('is-current', itemIndex === currentIndex)
     item.classList.toggle('is-complete', itemIndex < currentIndex)
+    if (itemIndex === currentIndex) item.setAttribute('aria-current', 'step')
+    else item.removeAttribute('aria-current')
   })
 
   panels[step]?.querySelector('h1')?.focus({ preventScroll: true })

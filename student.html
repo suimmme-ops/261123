@@ -9,10 +9,10 @@
   <body class="student-page">
     <header class="student-header">
       <a class="brand" href="/" aria-label="마음한칸 홈">
-        <span class="brand-mark" aria-hidden="true">마음</span><span>마음한칸</span>
+        <span>마음한칸</span><span class="student-brand-star" aria-hidden="true">✦</span>
       </a>
       <div class="activity-progress" aria-label="활동 진행 단계">
-        <span class="progress-item is-current" data-progress="key"><b>1</b> 준비</span>
+        <span class="progress-item is-current" data-progress="key" aria-current="step"><b>1</b> 준비</span>
         <span class="progress-line" aria-hidden="true"></span>
         <span class="progress-item" data-progress="chat"><b>2</b> 대화</span>
         <span class="progress-line" aria-hidden="true"></span>
@@ -32,11 +32,14 @@
       <section class="api-key-panel activity-panel" data-step="key" aria-labelledby="key-title">
         <div class="panel-intro">
           <span class="panel-symbol" aria-hidden="true">✦</span>
-          <p class="eyebrow">활동을 시작하기 전에</p>
-          <h1 id="key-title">마음 친구를 연결해 주세요</h1>
-          <p>OpenAI API 키를 확인하면 오늘의 대화와 그림 활동이 시작돼요.</p>
+          <p class="eyebrow">하루 끝, 나를 위한 작은 선물</p>
+          <h1 id="key-title" tabindex="-1">오늘의 마음을<br /><em>천천히 열어 봐요.</em></h1>
+          <p>어떤 하루였든 괜찮아요.<br />대화로 돌아보고, 그림으로 마음을 남겨 보세요.</p>
+          <p class="prepare-footnote">대화 3~7회 <span aria-hidden="true">·</span> 자유로운 마음 그림</p>
         </div>
 
+        <div class="connection-area">
+        <div class="connection-heading"><h2>마음 친구 연결하기</h2><p>OpenAI API 키를 입력하면 대화를 시작할 수 있어요.</p></div>
         <form class="key-form" data-key-form>
           <label for="api-key">OpenAI API Key</label>
           <div class="key-input-row">
@@ -72,13 +75,14 @@
             실제 학생 대상 배포에서는 반드시 서버를 통해 API를 호출해야 합니다.
           </p>
         </aside>
+        </div>
       </section>
 
       <section class="chat-panel activity-panel" data-step="chat" aria-labelledby="chat-title" hidden>
         <div class="chat-heading">
           <div>
             <p class="eyebrow">오늘의 마음 대화</p>
-            <h1 id="chat-title">마음 친구와 이야기해요</h1>
+            <h1 id="chat-title" tabindex="-1">마음 친구와 이야기해요</h1>
             <p>정답은 없어요. 떠오르는 만큼 편안하게 이야기해 주세요.</p>
           </div>
           <div class="turn-card" aria-label="대화 횟수">
@@ -119,7 +123,7 @@
         <div class="drawing-heading">
           <div>
             <p class="eyebrow">오늘의 마음 그림</p>
-            <h1 id="drawing-title">오늘 하루를 색과 선으로 표현해요</h1>
+            <h1 id="drawing-title" tabindex="-1">오늘의 마음을 그림에 담아요</h1>
             <p>잘 그리지 않아도 괜찮아요. 지금 떠오르는 색과 모양을 자유롭게 남겨 보세요.</p>
           </div>
           <span class="conversation-complete">대화 완료 · <b data-final-turns>0</b>회</span>
@@ -167,11 +171,13 @@
         </div>
 
         <div class="submission-area">
-          <p data-submit-status role="status" aria-live="polite">그림은 아직 어디에도 전송되지 않아요.</p>
+          <p data-submit-status role="status" aria-live="polite">제출하면 대화와 그림이 함께 저장돼요.</p>
           <button class="button button-primary submit-drawing" type="button" data-submit-drawing>그림 제출하기</button>
         </div>
       </section>
     </main>
+
+    <footer class="student-footer"><span>지금의 마음이면 충분해요.</span><span>마음한칸 · 오늘의 나를 만나는 시간</span></footer>
 
     <script type="module" src="/src/main.js"></script>
   </body>
